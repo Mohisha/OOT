@@ -1,5 +1,5 @@
 package src;
-//trial1
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 
 public class Checkout extends JFrame {
     
-    private SalesPersonDashboard parent;
     private JButton checkoutButton;
     private JTextField cardNumberField, checkNumberField;
     private JComboBox<String> paymentMethodCombo;
@@ -20,13 +19,13 @@ public class Checkout extends JFrame {
 
     public Checkout(Customer customer, List<Order> order_list) {
         
-        this.customer =  customer;
+        this.customer = customer;
 
         setTitle("Checkout");
         setLayout(new GridLayout(7, 2, 5, 5));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 200);
-        setLocationRelativeTo(parent);
+        setSize(400, 250);
+        setLocationRelativeTo(null);
 
         JLabel paymentMethodLabel = new JLabel("Payment Method:");
         paymentMethodCombo = new JComboBox<>(new String[] { "Cash", "Card", "Check" });
@@ -94,7 +93,15 @@ public class Checkout extends JFrame {
                     return;
                 }
 
-                database.create_order(customer, invoice);
+                // Add payment details to the database creation
+                String paymentDetails = "";
+                if ("Card".equals(method)) {
+                    paymentDetails = cardNumberField.getText().trim();
+                } else if ("Check".equals(method)) {
+                    paymentDetails = checkNumberField.getText().trim();
+                }
+                
+                Database.create_order(customer, invoice);
                 JOptionPane.showMessageDialog(null, "Checkout Successful!\nTotal: Rs " + invoice.get_invoice_total());
                 
                 dispose();
@@ -110,13 +117,13 @@ public class Checkout extends JFrame {
 
     public double get_transport_charge(String name){
         String query = "SELECT charge FROM Transport WHERE name=\"" + name + "\"";
-        ResultSet resultSet = database.executeQuery(query);
+        ResultSet resultSet = Database.executeQuery(query);
         double price = 0.00;
         try{
-            while (resultSet.next()){
+            if (resultSet != null && resultSet.next()){
                 price = resultSet.getDouble("charge");
+                resultSet.close();
             }
-            resultSet.close();
         }
         catch (SQLException e){
             System.out.println(e.getMessage());
