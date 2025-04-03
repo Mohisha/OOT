@@ -5,167 +5,400 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
-    // Database connection properties
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/store_management";
-    private static final String USER = "root"; // Default phpMyAdmin username
-    private static final String PASS = ""; // Default password is empty for XAMPP
+    private static final String url = "jdbc:mysql://localhost:3306/store_management2";
+    private static final String username = "root";
 
-    private static Connection connection = null;
-
-    // Get database connection
-    public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                // Load the MySQL JDBC driver
-                Class.forName("com.mysql.cj.jdbc.Driver");
-
-                // Create connection
-                connection = DriverManager.getConnection(DB_URL, USER, PASS);
-                System.out.println("Database connection established");
-            } catch (ClassNotFoundException e) {
-                System.out.println("JDBC Driver not found: " + e.getMessage());
-            } catch (SQLException e) {
-                System.out.println("Connection failed: " + e.getMessage());
-            }
-        }
-        return connection;
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(url, username, "");
     }
 
-    // Execute SQL query and return ResultSet
     public static ResultSet executeQuery(String query) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
         try {
-            Statement stmt = getConnection().createStatement();
-            return stmt.executeQuery(query);
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resultSet;
+    }
+
+    public static String[] fetch_item_ids() {
+        String query = "SELECT itemID FROM items;";
+        ResultSet resultset = Database.executeQuery(query);
+        List<String> IDs = new ArrayList<>();
+
+        try {
+            while (resultset.next()) {
+                IDs.add(resultset.getString("itemID"));
+            }
+            resultset.close();
         } catch (SQLException e) {
-            System.out.println("Query execution failed: " + e.getMessage());
-            return null;
+            System.out.println("Error fetching item IDs: " + e.getMessage());
+        }
+
+        return IDs.toArray(new String[0]);
+    }
+
+    public static double get_item_price_by_id(String itemID) {
+        String query = "SELECT sellingPrice FROM items WHERE itemID=" + itemID;
+        ResultSet resultSet = Database.executeQuery(query);
+        double price = 0.00;
+        try {
+            while (resultSet.next()) {
+                price = resultSet.getDouble("sellingPrice");
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return price;
+    }
+
+    public static String get_item_name_by_id(String itemID) {
+        String query = "SELECT itemName FROM items WHERE itemID=" + itemID;
+        ResultSet resultSet = Database.executeQuery(query);
+        String name = "";
+        try {
+            while (resultSet.next()) {
+                name = resultSet.getString("itemName");
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return name;
+    }
+
+    public static int get_item_stock_by_id(String itemID) {
+        String query = "SELECT stockLevel FROM items WHERE itemID=" + itemID;
+        ResultSet resultSet = Database.executeQuery(query);
+        int stock = 0;
+        try {
+            while (resultSet.next()) {
+                stock = resultSet.getInt("stockLevel");
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return stock;
+    }
+
+    public static String[] fetch_transport_methods() {
+        String query = "SELECT name FROM Transport;";
+        ResultSet resultset = Database.executeQuery(query);
+        List<String> transport_names = new ArrayList<>();
+
+        try {
+            while (resultset.next()) {
+                transport_names.add(resultset.getString("name"));
+            }
+            resultset.close();
+        } catch (SQLException e) {
+            System.out.println("Error fetching item IDs: " + e.getMessage());
+        }
+
+        return transport_names.toArray(new String[0]);
+    }
+
+    public static String[] fetch_low_stock_items() {
+        String query = "SELECT itemID, itemName, size, stockLevel, reorderLevel FROM items WHERE stockLevel < reorderLevel;";
+        ResultSet resultset = Database.executeQuery(query);
+        List<String> low_stock_items = new ArrayList<>();
+
+        try {
+            while (resultset.next()) {
+                low_stock_items.add(resultset.getString("itemID") + ". " + resultset.getString("itemName") + ". Size: "
+                        + resultset.getString("size") + ". Current Stock = " + resultset.getString("stockLevel")
+                        + ". Order More than: " + resultset.getString("reorderLevel"));
+            }
+            resultset.close();
+        } catch (SQLException e) {
+            System.out.println("Error fetching item IDs: " + e.getMessage());
+        }
+
+        return low_stock_items.toArray(new String[0]);
+    }
+
+    public static void create_reorder(String itemID, int qty) {
+        String query = "INSERT INTO InventoryUpdate (itemID, quantity) VALUES (?, ?)";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, itemID);
+            preparedStatement.setInt(2, qty);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Reorder inserted successfully!");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
-    // Execute SQL update (INSERT, UPDATE, DELETE)
-    public static int executeUpdate(String query) {
+    public static void insertData(String username, String password, String phone_number) {
+        String query = "INSERT INTO User (username, password, contactNo) VALUES (?, ?, ?)";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
         try {
-            Statement stmt = getConnection().createStatement();
-            return stmt.executeUpdate(query);
-        } catch (SQLException e) {
-            System.out.println("Update execution failed: " + e.getMessage());
-            return -1;
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, phone_number);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Data inserted successfully!");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
-    // Create order in database
-    public static void create_order(Customer customer, Invoice invoice, String paymentMethod, String paymentDetails) {
+    public static void insert_item(String item_name, double cost_price, double selling_price) {
+        String query = "INSERT INTO items (itemName, costPrice, sellingPrice) VALUES (?, ?, ?)";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
         try {
-            // First, check if customer exists, if not create
-            int customerId = getOrCreateCustomer(customer);
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query);
 
-            // Begin transaction
-            connection.setAutoCommit(false);
+            preparedStatement.setString(1, item_name);
+            preparedStatement.setDouble(2, cost_price);
+            preparedStatement.setDouble(3, selling_price);
+            preparedStatement.executeUpdate();
 
-            // Create order header
+            System.out.println("Item inserted successfully!");
 
-            String orderQuery = "INSERT INTO OrderHeader (customer_id, transport_preference, transport_charge, " +
-                    "total_amount, payment_method, payment_details) VALUES " +
-                    "(" + customerId + ", '" + invoice.get_transport_preference() + "', " +
-                    invoice.get_transport_charge() + ", " + invoice.get_invoice_total() + ", '" +
-                    paymentMethod + "', '" + paymentDetails + "')";
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
-            executeUpdate(orderQuery);
+    public static void update_item(String item_name, double cost_price, double selling_price) {
+        String query = "UPDATE items SET costPrice=?, sellingPrice=? WHERE itemName=?;";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
-            // Get the last inserted order ID
-            ResultSet rs = executeQuery("SELECT LAST_INSERT_ID() as order_id");
-            int orderId = 0;
-            if (rs.next()) {
-                orderId = rs.getInt("order_id");
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setDouble(1, cost_price);
+            preparedStatement.setDouble(2, selling_price);
+            preparedStatement.setString(3, item_name);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Item modified successfully!");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void update_item_stock(String item_id, int stockLevel) {
+        String query = "UPDATE items SET stockLevel=? WHERE itemID=?;";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setDouble(1, stockLevel);
+            preparedStatement.setString(2, item_id);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Item stock modified successfully!");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void update_item_price(String item_id, double price) {
+        String query = "UPDATE items SET sellingPrice=? WHERE itemID=?;";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setDouble(1, price);
+            preparedStatement.setString(2, item_id);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Item price modified successfully!");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String[] get_new_items() {
+        String query = "SELECT * FROM items WHERE sellingPrice IS NULL";
+        ResultSet resultset = Database.executeQuery(query);
+        List<String> new_items = new ArrayList<>();
+
+        try {
+            while (resultset.next()) {
+                new_items.add(resultset.getString("ItemID") + ". Name: " + resultset.getString("itemName") + ". Size: "
+                        + resultset.getString("size") + ". ");
             }
-            rs.close();
-
-            // Create order details
-            for (Order order : invoice.get_orders()) {
-                String detailQuery = "INSERT INTO OrderDetail (order_id, item_id, quantity, unit_price, " +
-                        "total_price, backorder_status) VALUES " +
-                        "(" + orderId + ", " + order.item_id + ", " + order.quantity + ", " +
-                        order.unitPrice + ", " + order.totalPrice + ", '" + order.backorderstatus + "')";
-                executeUpdate(detailQuery);
-            }
-
-            // Commit transaction
-            connection.commit();
-            connection.setAutoCommit(true);
-
+            resultset.close();
         } catch (SQLException e) {
+            System.out.println("Error fetching item IDs: " + e.getMessage());
+        }
+
+        return new_items.toArray(new String[0]);
+    }
+
+    public static String[] get_all_items() {
+        String query = "SELECT itemID, itemName FROM items";
+        ResultSet resultset = Database.executeQuery(query);
+        List<String> new_items = new ArrayList<>();
+
+        try {
+            while (resultset.next()) {
+                new_items.add(resultset.getString("ItemID") + ". Name: " + resultset.getString("itemName"));
+            }
+            resultset.close();
+        } catch (SQLException e) {
+            System.out.println("Error fetching item IDs: " + e.getMessage());
+        }
+
+        return new_items.toArray(new String[0]);
+    }
+
+    public static void delete_item(String itemID) {
+        String query = "DELETE FROM items WHERE itemID=?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, itemID);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Item deleted successfully!");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void create_order(Customer customer, Invoice invoice) {
+        String query = "INSERT INTO Customer (firstName, lastName, contactNo, address, email, transportPreference) VALUES (?, ?, ? ,?, ?, ?)";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet generatedKeys = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, customer.first_name);
+            preparedStatement.setString(2, customer.last_name);
+            preparedStatement.setString(3, customer.contactDetails);
+            preparedStatement.setString(4, customer.address);
+            preparedStatement.setString(5, customer.email);
+            preparedStatement.setString(6, customer.transportPreference);
+
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows > 0) {
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int customerID = generatedKeys.getInt(1);
+
+                    generatedKeys = null;
+                    query = "INSERT INTO Invoice (customerID, orderTotal, transportCharge, invoice_total, transportID) VALUES (?, ?, ?, ?, ?)";
+
+                    preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+                    preparedStatement.setInt(1, customerID);
+                    preparedStatement.setDouble(2, invoice.get_order_total());
+                    preparedStatement.setDouble(3, invoice.get_transport_charge());
+                    preparedStatement.setDouble(4, invoice.get_invoice_total());
+                    preparedStatement.setString(5, customer.transportPreference);
+
+                    affectedRows = preparedStatement.executeUpdate();
+
+                    if (affectedRows > 0) {
+                        generatedKeys = preparedStatement.getGeneratedKeys();
+                        if (generatedKeys.next()) {
+                            int invoiceID = generatedKeys.getInt(1);
+
+                            generatedKeys = null;
+                            query = "INSERT INTO OrderDetails (invoiceID, itemID, quantity, unitPrice, totalPrice, backOrderStatus) VALUES (?, ?, ?, ?, ?, ?)";
+                            preparedStatement = connection.prepareStatement(query);
+
+                            for (Order order : invoice.get_orders()) {
+                                preparedStatement.setInt(1, invoiceID);
+                                preparedStatement.setInt(2, order.item_id);
+                                preparedStatement.setInt(3, order.quantity);
+                                preparedStatement.setDouble(4, order.unitPrice);
+                                preparedStatement.setDouble(5, order.totalPrice);
+                                preparedStatement.setString(6, order.backorderstatus);
+                                affectedRows += preparedStatement.executeUpdate();
+
+                                int current_item_stock = get_item_stock_by_id((String.valueOf(order.item_id)));
+                                update_item_stock((String.valueOf(order.item_id)), current_item_stock - order.quantity);
+                            }
+
+                            if (affectedRows > 0) {
+                                System.out.println(affectedRows + " orders added successfully!");
+                            } else {
+                                System.out.println("Error adding orders");
+                            }
+                            System.out.println("Invoice added successfully! Invoice ID: " + invoiceID);
+                        }
+                    } else {
+                        System.out.println("Invoice insertion failed!");
+                    }
+                    System.out.println("Customer added successfully! Customer ID: " + customerID);
+                }
+            } else {
+                System.out.println("Customer insertion failed!");
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                // Rollback transaction in case of error
-                connection.rollback();
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                System.out.println("Rollback failed: " + ex.getMessage());
-            }
-            System.out.println("Order creation failed: " + e.getMessage());
-        }
-    }
-
-    // Get customer ID if exists, otherwise create new customer
-    private static int getOrCreateCustomer(Customer customer) throws SQLException {
-        String query = "SELECT customer_id FROM Customer WHERE email = '" + customer.email + "'";
-        ResultSet rs = executeQuery(query);
-
-        if (rs.next()) {
-            int customerId = rs.getInt("customer_id");
-            rs.close();
-            return customerId;
-        } else {
-            rs.close();
-            String insertQuery = "INSERT INTO Customer (first_name, last_name, contact_details, email, address, transport_preference) "
-                    +
-                    "VALUES ('" + customer.first_name + "', '" + customer.last_name + "', '" +
-                    customer.contactDetails + "', '" + customer.email + "', '" +
-                    customer.address + "', '" + customer.transportPreference + "')";
-            executeUpdate(insertQuery);
-
-            ResultSet idRs = executeQuery("SELECT LAST_INSERT_ID() as customer_id");
-            int customerId = 0;
-            if (idRs.next()) {
-                customerId = idRs.getInt("customer_id");
-            }
-            idRs.close();
-            return customerId;
-        }
-    }
-
-    // Close database connection
-    public static void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-                System.out.println("Database connection closed");
+                if (generatedKeys != null)
+                    generatedKeys.close();
+                if (preparedStatement != null)
+                    preparedStatement.close();
+                if (connection != null)
+                    connection.close();
             } catch (SQLException e) {
-                System.out.println("Failed to close connection: " + e.getMessage());
+                e.printStackTrace();
             }
         }
-    }
-
-    // Method to get items from database
-    public static List<Item> getItems() {
-        List<Item> items = new ArrayList<>();
-        String query = "SELECT * FROM Item";
-
-        try {
-            ResultSet rs = executeQuery(query);
-            while (rs.next()) {
-                int id = rs.getInt("item_id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                double price = rs.getDouble("unit_price");
-
-                Item item = new Item(id, name, description, price);
-                items.add(item);
-            }
-            rs.close();
-        } catch (SQLException e) {
-            System.out.println("Error retrieving items: " + e.getMessage());
-        }
-
-        return items;
     }
 }
