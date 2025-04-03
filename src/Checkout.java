@@ -28,7 +28,7 @@ public class Checkout extends JFrame {
         setLocationRelativeTo(null);
 
         JLabel paymentMethodLabel = new JLabel("Payment Method:");
-        paymentMethodCombo = new JComboBox<>(new String[] { "Cash", "Card", "Check" });
+        paymentMethodCombo = new JComboBox<>(new String[] {"Select Payment Method","Card", "Check" });
 
         invoice = new Invoice();
 
@@ -84,24 +84,42 @@ public class Checkout extends JFrame {
             if(ae.getSource() == checkoutButton){
                 
                 String method = (String) paymentMethodCombo.getSelectedItem();
-                if ("Card".equals(method) && cardNumberField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(null , "Please enter card number!");
-                    return;
+                if ("Card".equals(method)) {
+                    String cardNumber = cardNumberField.getText().trim();
+                    if (cardNumber.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Please enter card number!");
+                        return;
+                    }
+                    if (!Validator.isValidCardNumber(cardNumber)) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid card number!", 
+                                                    "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                 }
-                if ("Check".equals(method) && checkNumberField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please enter check number!");
-                    return;
+                if ("Check".equals(method)) {
+                    String checkNumber = checkNumberField.getText().trim();
+                    if (checkNumber.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Please enter check number!");
+                        return;
+                    }
+                    if (!Validator.isValidCheckNumber(checkNumber)) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid check number (6 digits)!", 
+                                                    "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                 }
 
                 // Add payment details to the database creation
                 String paymentDetails = "";
-                if ("Card".equals(method)) {
+                String paymentMethod = (String) paymentMethodCombo.getSelectedItem(); // Get selected payment method
+
+                if ("Card".equals(paymentMethod)) {
                     paymentDetails = cardNumberField.getText().trim();
-                } else if ("Check".equals(method)) {
+                } else if ("Check".equals(paymentMethod)) {
                     paymentDetails = checkNumberField.getText().trim();
                 }
                 
-                Database.create_order(customer, invoice);
+                Database.create_order(customer, invoice, paymentMethod, paymentDetails);
                 JOptionPane.showMessageDialog(null, "Checkout Successful!\nTotal: Rs " + invoice.get_invoice_total());
                 
                 dispose();

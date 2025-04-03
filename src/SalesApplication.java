@@ -136,6 +136,12 @@ public class SalesApplication extends JFrame {
                             "Please add items to your order first.", "Empty Order", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
+                
+                // Validate customer fields before proceeding
+                if (!validateCustomerFields()) {
+                    return;
+                }
+                
                 currentCustomer = new Customer(
                         firstNameField.getText(),
                         lastNameField.getText(),
@@ -145,10 +151,57 @@ public class SalesApplication extends JFrame {
                         (String) transportPreferenceComboBox.getSelectedItem()
                 );
                 new Checkout(currentCustomer, orderList);
+                SalesApplication.this.dispose();
             }
         });
 
         setVisible(true);
+    }
+    
+    private boolean validateCustomerFields() {
+        // Check if required fields are not empty
+        if (firstNameField.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "First name is required.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            firstNameField.requestFocus();
+            return false;
+        }
+        
+        if (lastNameField.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Last name is required.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            lastNameField.requestFocus();
+            return false;
+        }
+        
+        // Validate contact
+        String contact = contactField.getText().trim();
+        if (contact.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Contact number is required.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            contactField.requestFocus();
+            return false;
+        }
+        
+        if (!Validator.isValidContact(contact)) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid contact number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            contactField.requestFocus();
+            return false;
+        }
+        
+        // Validate email
+        String email = emailField.getText().trim();
+        if (email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Email is required.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            emailField.requestFocus();
+            return false;
+        }
+        
+        if (!Validator.isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid email address.", 
+                                          "Validation Error", JOptionPane.ERROR_MESSAGE);
+            emailField.requestFocus();
+            return false;
+        }
+        
+        return true;
     }
 
     private void loadItems() {
