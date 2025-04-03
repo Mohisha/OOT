@@ -40,10 +40,12 @@ public class SalesPersonDashboard extends JFrame {
 
         setLayout(new BorderLayout(5, 10));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 500);
+        setSize(1200, 600);
+        getContentPane().setBackground(new Color(240, 248, 255)); // Light AliceBlue background
 
         // left panel for inputs
         JPanel leftMainPanel = new JPanel(new BorderLayout(5, 5));
+        leftMainPanel.setForeground(new Color(224, 0, 255)); // Light Cyan background
         inputPanel = new JPanel(new GridLayout(6, 2));
         sessionPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
@@ -77,8 +79,8 @@ public class SalesPersonDashboard extends JFrame {
         rightMainPanel = new JPanel(new BorderLayout());
         rightMainPanel.add(scrollPane, BorderLayout.CENTER);
         totalPriceLabel = new JLabel("Total Price Rs 0.0");
-        totalPriceLabel.setForeground(Color.RED);
-        checkoutButton = createStyledButton("Checkout");
+        totalPriceLabel.setForeground(Color.blue);
+        checkoutButton = createStyledButton("Proceed to Checkout");
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(totalPriceLabel, BorderLayout.NORTH);
@@ -105,7 +107,8 @@ public class SalesPersonDashboard extends JFrame {
         public CustomerDetailsFrame() {
             super("Customer Details");
             setLayout(new GridLayout(7, 2));
-            setSize(400, 300);
+            getContentPane().setBackground(new Color(240, 248, 255)); // Light AliceBlue background
+            setSize(600, 400);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             firstNameField = new JTextField();
@@ -169,7 +172,7 @@ public class SalesPersonDashboard extends JFrame {
                         currentTotalLabel.setText("Current Item Total: Rs " + price);
                         totalPriceLabel.setText("Order Total Rs: " + totalPrice);
 
-                        String order_string = "Product ID: " + productId + ", Quantity: " + qty + ", Size: " + size
+                        String order_string = "Item ID: " + productId + ", Quantity: " + qty + ", Size: " + size
                                 + ", Price: " + price + " Rs";
 
                         JPanel orderPanel = new JPanel(new BorderLayout());
@@ -239,9 +242,9 @@ public class SalesPersonDashboard extends JFrame {
 
     public void create_order_input_panel() {
 
-        addButton.setText("Add Order");
+        addButton.setText("Add to cart");
 
-        inputPanel.add(new JLabel("Product ID:"));
+        inputPanel.add(new JLabel("Item ID:"));
         inputPanel.add(productIdComboBox);
 
         inputPanel.add(new JLabel("Unit Price: Rs "));
@@ -285,8 +288,8 @@ public class SalesPersonDashboard extends JFrame {
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setBackground(Color.WHITE);
-        button.setForeground(Color.blue);
+        button.setBackground(new Color(255, 255, 240)); // Ivory color
+        button.setForeground(new Color(0, 0, 128)); // Navy color
         button.setFont(new Font("Arial", Font.BOLD, 14));
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));

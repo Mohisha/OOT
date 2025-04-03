@@ -2,40 +2,43 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class InventoryOfficerDashboard extends JFrame {
     private JComboBox<String> actionComboBox;
     private JPanel leftPanel;
-    private JPanel displayPanel; // Right panel to display information
-    private ArrayList<String> inventoryItems = new ArrayList<>(); // Store items for display
+    private JPanel displayPanel;
 
     public InventoryOfficerDashboard() {
         super("Inventory Officer Dashboard");
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(1000, 600);
+        getContentPane().setBackground(new Color(245, 245, 245));
 
-        // Left panel for input
-        leftPanel = new JPanel(new GridLayout(5, 2, 10, 10));
-        actionComboBox = new JComboBox<>(new String[] { "All Inventory", "Update Item", "Add Item" });
+        leftPanel = new JPanel(new GridLayout(5, 2, 10, 20));
+        leftPanel.setBackground(new Color(230, 230, 250));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        actionComboBox = new JComboBox<>(new String[]{"All Inventory", "Update Item", "Add Item"});
+        actionComboBox.setFont(new Font("Arial", Font.BOLD, 14));
+        actionComboBox.setBackground(Color.WHITE);
+
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setBackground(new Color(230, 230, 250));
         topPanel.add(actionComboBox);
 
-        // Right panel for display
         displayPanel = new JPanel();
         displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
+        displayPanel.setBackground(Color.WHITE);
         JScrollPane scrollPane = new JScrollPane(displayPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Add panels to frame
         add(topPanel, BorderLayout.NORTH);
         add(leftPanel, BorderLayout.WEST);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Initial state: All Inventory
         showAllInventoryPanel();
 
-        // Action listener for JComboBox
         actionComboBox.addActionListener(e -> {
             String selectedAction = (String) actionComboBox.getSelectedItem();
             leftPanel.removeAll();
@@ -62,15 +65,15 @@ public class InventoryOfficerDashboard extends JFrame {
         setVisible(true);
     }
 
-    // Panel for "All Inventory"
     private void showAllInventoryPanel() {
         JLabel searchLabel = new JLabel("Search Item:");
-        JTextField searchField = new JTextField();
+        searchLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        JTextField searchField = new JTextField(20);
+        searchField.setFont(new Font("Arial", Font.PLAIN, 14));
 
         leftPanel.add(searchLabel);
         leftPanel.add(searchField);
 
-        // Fill remaining rows with empty labels to maintain grid layout
         for (int i = 0; i < 4; i++) {
             leftPanel.add(new JLabel());
             leftPanel.add(new JLabel());
@@ -80,29 +83,37 @@ public class InventoryOfficerDashboard extends JFrame {
             displayPanel.removeAll();
             String searchText = searchField.getText().trim();
             if (searchText.isEmpty()) {
-                // Display all items
                 displayAllItems();
             } else {
-                // Filter items based on search
                 displayFilteredItems(searchText);
             }
             displayPanel.revalidate();
             displayPanel.repaint();
         });
 
-        // Initial display of all items
         displayAllItems();
     }
 
-    // Panel for "Update Item"
     private void showUpdateItemPanel() {
         JLabel productNameLabel = new JLabel("Product Name:");
-        JTextField productNameField = new JTextField();
         JLabel priceLabel = new JLabel("Price:");
-        JTextField priceField = new JTextField();
         JLabel quantityLabel = new JLabel("Quantity:");
-        JTextField quantityField = new JTextField();
+
+        productNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        priceLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        quantityLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        JTextField productNameField = new JTextField(20);
+        JTextField priceField = new JTextField(10);
+        JTextField quantityField = new JTextField(10);
+
+        productNameField.setFont(new Font("Arial", Font.PLAIN, 14));
+        priceField.setFont(new Font("Arial", Font.PLAIN, 14));
+        quantityField.setFont(new Font("Arial", Font.PLAIN, 14));
+
         JButton updateButton = new JButton("Update Item");
+        updateButton.setFont(new Font("Arial", Font.BOLD, 14));
+        updateButton.setBackground(new Color(173, 216, 230));
 
         leftPanel.add(productNameLabel);
         leftPanel.add(productNameField);
@@ -124,14 +135,12 @@ public class InventoryOfficerDashboard extends JFrame {
                     int quantity = Integer.parseInt(qtyText);
                     String item = "Product Name: " + name + ", Price: Rs " + price + ", Stock: " + quantity;
 
-                    // Update logic (placeholder: just display for now)
                     displayPanel.removeAll();
                     displayPanel.add(new JLabel("Updated Item:"));
                     displayPanel.add(new JLabel(item));
                     displayPanel.revalidate();
                     displayPanel.repaint();
 
-                    // Clear fields
                     productNameField.setText("");
                     priceField.setText("");
                     quantityField.setText("");
@@ -144,15 +153,26 @@ public class InventoryOfficerDashboard extends JFrame {
         });
     }
 
-    // Panel for "Add Item"
     private void showAddItemPanel() {
         JLabel productNameLabel = new JLabel("Product Name:");
-        JTextField productNameField = new JTextField();
         JLabel priceLabel = new JLabel("Price:");
-        JTextField priceField = new JTextField();
         JLabel quantityLabel = new JLabel("Quantity:");
-        JTextField quantityField = new JTextField();
+
+        productNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        priceLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        quantityLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        JTextField productNameField = new JTextField(20);
+        JTextField priceField = new JTextField(10);
+        JTextField quantityField = new JTextField(10);
+
+        productNameField.setFont(new Font("Arial", Font.PLAIN, 14));
+        priceField.setFont(new Font("Arial", Font.PLAIN, 14));
+        quantityField.setFont(new Font("Arial", Font.PLAIN, 14));
+
         JButton addButton = new JButton("Add Item");
+        addButton.setFont(new Font("Arial", Font.BOLD, 14));
+        addButton.setBackground(new Color(144, 238, 144));
 
         leftPanel.add(productNameLabel);
         leftPanel.add(productNameField);
@@ -174,15 +194,12 @@ public class InventoryOfficerDashboard extends JFrame {
                     int quantity = Integer.parseInt(qtyText);
                     String item = "Product Name: " + name + ", Price: Rs " + price + ", Stock: " + quantity;
 
-                    // Add to inventory //Placeholder
-                    inventoryItems.add(item);
                     displayPanel.removeAll();
                     displayPanel.add(new JLabel("Added Item:"));
                     displayPanel.add(new JLabel(item));
                     displayPanel.revalidate();
                     displayPanel.repaint();
 
-                    // Clear fields
                     productNameField.setText("");
                     priceField.setText("");
                     quantityField.setText("");
@@ -197,7 +214,6 @@ public class InventoryOfficerDashboard extends JFrame {
 
     private void displayAllItems() {
         displayPanel.add(new JLabel("All Inventory:"));
-        // Updated inventory data with T-shirt, Short, Bikini
         String[] defaultItems = {
                 "Product Name: Tiger Plushie, Price: Rs 45.00, Stock: 34",
                 "Product Name: Elephant Lamp, Price: Rs 30.00, Stock: 28",
@@ -208,17 +224,14 @@ public class InventoryOfficerDashboard extends JFrame {
                 "Product Name: Leather Jacket, Price: Rs 380.00, Stock: 5"
         };
         for (String item : defaultItems) {
-            displayPanel.add(new JLabel(item));
-        }
-        for (String item : inventoryItems) {
-            displayPanel.add(new JLabel(item));
+            JLabel itemLabel = new JLabel(item);
+            itemLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            displayPanel.add(itemLabel);
         }
     }
 
-    // Helper method to display filtered items
     private void displayFilteredItems(String searchText) {
         displayPanel.add(new JLabel("Search Results for '" + searchText + "':"));
-        // Updated inventory data with T-shirt, Short, Bikini
         String[] defaultItems = {
                 "Product Name: Tiger Plushie, Price: Rs 35.00, Stock: 34",
                 "Product Name: Elephant Lamp, Price: Rs 25.00, Stock: 28",
@@ -227,16 +240,12 @@ public class InventoryOfficerDashboard extends JFrame {
                 "Product Name: Jogger Sweatpants, Price: Rs 75.00, Stock: 25",
                 "Product Name: Sporty T-shirt, Price: Rs 120.00, Stock: 19",
                 "Product Name: Leather Jacket, Price: Rs 280.00, Stock: 5"
-
         };
         for (String item : defaultItems) {
             if (item.toLowerCase().contains(searchText.toLowerCase())) {
-                displayPanel.add(new JLabel(item));
-            }
-        }
-        for (String item : inventoryItems) {
-            if (item.toLowerCase().contains(searchText.toLowerCase())) {
-                displayPanel.add(new JLabel(item));
+                JLabel itemLabel = new JLabel(item);
+                itemLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+                displayPanel.add(itemLabel);
             }
         }
     }

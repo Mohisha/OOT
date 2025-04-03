@@ -19,16 +19,21 @@ public class LoginPage extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 2, 10, 10));
-        panel.setBackground(Color.LIGHT_GRAY);
+        panel.setBackground(new Color(240, 248, 255)); // AliceBlue background
 
         JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setForeground(new Color(0, 0, 128)); // Navy text
         usernameField = new JTextField();
+        usernameField.setBackground(new Color(255, 255, 240)); // Ivory background
 
         JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setForeground(new Color(0, 0, 128)); // Navy text
         passwordField = new JPasswordField();
+        passwordField.setBackground(new Color(255, 255, 240)); // Ivory background
 
         loginButton = new JButton("Login");
-        loginButton.setBackground(Color.GREEN);
+        loginButton.setBackground(new Color(152, 251, 152)); // LightGreen button
+        loginButton.setForeground(new Color(0, 100, 0)); // DarkGreen text
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
 
         panel.add(usernameLabel);
