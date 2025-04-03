@@ -94,7 +94,7 @@ public class Checkout extends JFrame {
                     return;
                 }
 
-                database.create_order(customer, quotation);
+                Database.create_order(customer, quotation);
                 JOptionPane.showMessageDialog(null, "Checkout Successful!\nTotal: Rs " + quotation.get_quotation_total());
                 
                 dispose();
@@ -110,7 +110,7 @@ public class Checkout extends JFrame {
 
     public double get_transport_charge(String name){
         String query = "SELECT charge FROM Transport WHERE name=\"" + name + "\"";
-        ResultSet resultSet = database.executeQuery(query);
+        ResultSet resultSet = Database.executeQuery(query);
         double price = 0.00;
         try{
             while (resultSet.next()){
