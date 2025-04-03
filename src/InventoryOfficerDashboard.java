@@ -220,13 +220,13 @@ public class InventoryOfficerDashboard extends JFrame {
         displayPanel.add(new JLabel("Search Results for '" + searchText + "':"));
         // Updated inventory data with T-shirt, Short, Bikini
         String[] defaultItems = {
-                "Product Name: Tiger Plushie, Price: Rs 45.00, Stock: 34",
-                "Product Name: Elephant Lamp, Price: Rs 30.00, Stock: 28",
-                "Product Name: Cozy Hoodie, Price: Rs 95.00, Stock: 15",
-                "Product Name: Classic T-shirt, Price: Rs 65.00, Stock: 22",
-                "Product Name: Jogger Sweatpants, Price: Rs 85.00, Stock: 25",
-                "Product Name: Sporty T-shirt, Price: Rs 130.00, Stock: 19",
-                "Product Name: Leather Jacket, Price: Rs 380.00, Stock: 5"
+                "Product Name: Tiger Plushie, Price: Rs 35.00, Stock: 34",
+                "Product Name: Elephant Lamp, Price: Rs 25.00, Stock: 28",
+                "Product Name: Cozy Hoodie, Price: Rs 85.00, Stock: 15",
+                "Product Name: Classic T-shirt, Price: Rs 55.00, Stock: 22",
+                "Product Name: Jogger Sweatpants, Price: Rs 75.00, Stock: 25",
+                "Product Name: Sporty T-shirt, Price: Rs 120.00, Stock: 19",
+                "Product Name: Leather Jacket, Price: Rs 280.00, Stock: 5"
 
         };
         for (String item : defaultItems) {
