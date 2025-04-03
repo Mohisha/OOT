@@ -199,9 +199,13 @@ public class InventoryOfficerDashboard extends JFrame {
         displayPanel.add(new JLabel("All Inventory:"));
         // Updated inventory data with T-shirt, Short, Bikini
         String[] defaultItems = {
-                "Product Name: T-shirt, Price: Rs 500, Stock: 20",
-                "Product Name: Short, Price: Rs 300, Stock: 15",
-                "Product Name: Bikini, Price: Rs 700, Stock: 10"
+                "Product Name: Tiger Plushie, Price: Rs 45.00, Stock: 34",
+                "Product Name: Elephant Lamp, Price: Rs 30.00, Stock: 28",
+                "Product Name: Cozy Hoodie, Price: Rs 95.00, Stock: 15",
+                "Product Name: Classic T-shirt, Price: Rs 65.00, Stock: 22",
+                "Product Name: Jogger Sweatpants, Price: Rs 85.00, Stock: 25",
+                "Product Name: Sporty T-shirt, Price: Rs 130.00, Stock: 19",
+                "Product Name: Leather Jacket, Price: Rs 380.00, Stock: 5"
         };
         for (String item : defaultItems) {
             displayPanel.add(new JLabel(item));
@@ -216,9 +220,14 @@ public class InventoryOfficerDashboard extends JFrame {
         displayPanel.add(new JLabel("Search Results for '" + searchText + "':"));
         // Updated inventory data with T-shirt, Short, Bikini
         String[] defaultItems = {
-                "Product Name: T-shirt, Price: Rs 500, Stock: 20",
-                "Product Name: Short, Price: Rs 300, Stock: 15",
-                "Product Name: Bikini, Price: Rs 700, Stock: 10"
+                "Product Name: Tiger Plushie, Price: Rs 45.00, Stock: 34",
+                "Product Name: Elephant Lamp, Price: Rs 30.00, Stock: 28",
+                "Product Name: Cozy Hoodie, Price: Rs 95.00, Stock: 15",
+                "Product Name: Classic T-shirt, Price: Rs 65.00, Stock: 22",
+                "Product Name: Jogger Sweatpants, Price: Rs 85.00, Stock: 25",
+                "Product Name: Sporty T-shirt, Price: Rs 130.00, Stock: 19",
+                "Product Name: Leather Jacket, Price: Rs 380.00, Stock: 5"
+
         };
         for (String item : defaultItems) {
             if (item.toLowerCase().contains(searchText.toLowerCase())) {
