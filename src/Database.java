@@ -311,7 +311,7 @@ public class database {
         }
     }
 
-    public static void create_order(Customer customer, Invoice invoice) {
+    public static void create_order(Customer customer, Quotation quotation) {
         String query = "INSERT INTO Customer (firstName, lastName, contactNo, address, email, transportPreference) VALUES (?, ?, ? ,?, ?, ?)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -336,14 +336,14 @@ public class database {
                     int customerID = generatedKeys.getInt(1);
 
                     generatedKeys = null;
-                    query = "INSERT INTO Invoice (customerID, orderTotal, transportCharge, invoice_total, transportID) VALUES (?, ?, ?, ?, ?)";
+                    query = "INSERT INTO Quotation (customerID, orderTotal, transportCharge, quotation_total, transportID) VALUES (?, ?, ?, ?, ?)";
 
                     preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
                     preparedStatement.setInt(1, customerID);
-                    preparedStatement.setDouble(2, invoice.get_order_total());
-                    preparedStatement.setDouble(3, invoice.get_transport_charge());
-                    preparedStatement.setDouble(4, invoice.get_invoice_total());
+                    preparedStatement.setDouble(2, quotation.get_order_total());
+                    preparedStatement.setDouble(3, quotation.get_transport_charge());
+                    preparedStatement.setDouble(4, quotation.get_quotation_total());
                     preparedStatement.setString(5, customer.transportPreference);
 
                     affectedRows = preparedStatement.executeUpdate();
@@ -351,14 +351,14 @@ public class database {
                     if (affectedRows > 0) {
                         generatedKeys = preparedStatement.getGeneratedKeys();
                         if (generatedKeys.next()) {
-                            int invoiceID = generatedKeys.getInt(1);
+                            int quotationID = generatedKeys.getInt(1);
 
                             generatedKeys = null;
-                            query = "INSERT INTO OrderDetails (invoiceID, itemID, quantity, unitPrice, totalPrice, backOrderStatus) VALUES (?, ?, ?, ?, ?, ?)";
+                            query = "INSERT INTO OrderDetails (quotationID, itemID, quantity, unitPrice, totalPrice, backOrderStatus) VALUES (?, ?, ?, ?, ?, ?)";
                             preparedStatement = connection.prepareStatement(query);
 
-                            for (Order order : invoice.get_orders()) {
-                                preparedStatement.setInt(1, invoiceID);
+                            for (Order order : quotation.get_orders()) {
+                                preparedStatement.setInt(1, quotationID);
                                 preparedStatement.setInt(2, order.item_id);
                                 preparedStatement.setInt(3, order.quantity);
                                 preparedStatement.setDouble(4, order.unitPrice);
@@ -375,10 +375,10 @@ public class database {
                             } else {
                                 System.out.println("Error adding orders");
                             }
-                            System.out.println("Invoice added successfully! Invoice ID: " + invoiceID);
+                            System.out.println("quotation added successfully! quotation ID: " + quotationID);
                         }
                     } else {
-                        System.out.println("Invoice insertion failed!");
+                        System.out.println("quotation insertion failed!");
                     }
                     System.out.println("Customer added successfully! Customer ID: " + customerID);
                 }

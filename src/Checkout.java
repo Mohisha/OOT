@@ -16,7 +16,7 @@ public class Checkout extends JFrame {
     private JTextField cardNumberField, checkNumberField;
     private JComboBox<String> paymentMethodCombo;
     private Customer customer;
-    private Invoice invoice;
+    private Quotation quotation;
 
     public Checkout(Customer customer, List<Order> order_list) {
         
@@ -31,23 +31,23 @@ public class Checkout extends JFrame {
         JLabel paymentMethodLabel = new JLabel("Payment Method:");
         paymentMethodCombo = new JComboBox<>(new String[] { "Card", "Check" });
 
-        invoice = new Invoice();
+        quotation = new Quotation();
 
         for (Order order : order_list) {
-            invoice.AddOrder(order);
+            quotation.AddOrder(order);
         }
         
-        invoice.AddTransportCharge(get_transport_charge(customer.transportPreference));
-        invoice.AddTransportPreference(customer.transportPreference);
+        quotation.AddTransportCharge(get_transport_charge(customer.transportPreference));
+        quotation.AddTransportPreference(customer.transportPreference);
 
-        JLabel transportLabel = new JLabel("Transport Fee Amount(" + invoice.get_transport_preference() + "): ");
-        JLabel transportValue = new JLabel("Rs " + invoice.get_transport_charge());
+        JLabel transportLabel = new JLabel("Transport Fee Amount(" + quotation.get_transport_preference() + "): ");
+        JLabel transportValue = new JLabel("Rs " + quotation.get_transport_charge());
 
         JLabel orderAmountLabel = new JLabel("Order Amount:");
-        JLabel orderAmount = new JLabel("Rs " + invoice.get_order_total());
+        JLabel orderAmount = new JLabel("Rs " + quotation.get_order_total());
 
         JLabel invoiceAmountLabel = new JLabel("Total Amount:");
-        JLabel invoiceAmount = new JLabel("Rs " + invoice.get_invoice_total());
+        JLabel invoiceAmount = new JLabel("Rs " + quotation.get_quotation_total());
 
         JLabel cardNumberLabel = new JLabel("Card No:");
         cardNumberField = new JTextField();
@@ -94,8 +94,8 @@ public class Checkout extends JFrame {
                     return;
                 }
 
-                database.create_order(customer, invoice);
-                JOptionPane.showMessageDialog(null, "Checkout Successful!\nTotal: Rs " + invoice.get_invoice_total());
+                database.create_order(customer, quotation);
+                JOptionPane.showMessageDialog(null, "Checkout Successful!\nTotal: Rs " + quotation.get_quotation_total());
                 
                 dispose();
             }

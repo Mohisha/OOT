@@ -2,14 +2,14 @@ package src;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Invoice {
+public class Quotation {
     
     private List<Order> orders; 
     private double totalAmount;
     private double transportCharge;
     private String transport_preference;
 
-    public Invoice() {
+    public Quotation() {
         this.orders = new ArrayList<>();
         this.totalAmount = 0.0;
         this.transportCharge = 0.0;
@@ -29,7 +29,7 @@ public class Invoice {
         transport_preference = transport;
     }
 
-    public double get_invoice_total(){
+    public double get_quotation_total(){
         return totalAmount;
     }
 
@@ -49,7 +49,7 @@ public class Invoice {
         return orders;
     }
 
-    public void displayInvoice() {
+    public void displayQuotation() {
         System.out.println("Orders:");
         for (Order order : orders) {
             System.out.println(order);
