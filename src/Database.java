@@ -119,8 +119,8 @@ public class Database {
         try {
             while (resultset.next()) {
                 low_stock_items.add(resultset.getString("itemID") + ". " + resultset.getString("itemName") + ". Size: "
-                        + resultset.getString("size") + ". Current Stock = " + resultset.getString("stockLevel")
-                        + ". Order More than: " + resultset.getString("reorderLevel"));
+                        + resultset.getString("size") + ". The current stock is : " + resultset.getString("stockLevel")
+                        + ". Order a minimum of :  " + resultset.getString("reorderLevel"));
             }
             resultset.close();
         } catch (SQLException e) {

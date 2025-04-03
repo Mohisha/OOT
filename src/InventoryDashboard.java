@@ -15,7 +15,7 @@ public class InventoryDashboard extends JFrame {
     private JLabel sessionLabel;
     private JButton order_new_stock_button;
     private JComboBox<String> sizeOption, productIdComboBox;
-    private JPanel orderDisplayPanel, inputPanel, rightMainPanel, leftMainPanel, sessionPanel, buttonPanel; // Corrected leftMainPane1 to leftMainPanel
+    private JPanel orderDisplayPanel, inputPanel, rightMainPanel, leftMainPanel, sessionPanel; // Corrected leftMainPane1 to leftMainPanel
     private JTextField quantityField, productNameTextField;
     private JButton update_item_stock_button, updateInventoryButton;
 
@@ -29,7 +29,6 @@ public class InventoryDashboard extends JFrame {
         // left panel for inputs 
         JPanel leftMainPanel = new JPanel(new BorderLayout(5, 5));
         inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)); // Added buttonPanel with FlowLayout
         sessionPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         // Session panel
@@ -65,7 +64,7 @@ public class InventoryDashboard extends JFrame {
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         rightMainPanel.add(bottomPanel, BorderLayout.SOUTH);
-        rightMainPanel.setBorder(create_border("Inventory Items Needing Restock."));
+        rightMainPanel.setBorder(create_border("Inventory Items to be Restocked."));
 
         // Add main panels to the main frame
         add(leftMainPanel);
@@ -115,10 +114,10 @@ public class InventoryDashboard extends JFrame {
     }
 
     public void create_order_input_panel() {
-        inputPanel.add(new JLabel("Product ID:"));
+        inputPanel.add(new JLabel("Item ID:"));
         inputPanel.add(productIdComboBox);
 
-        inputPanel.add(new JLabel("Product Name:"));
+        inputPanel.add(new JLabel("Item Name:"));
         productNameTextField = new JTextField();
         productNameTextField.setEditable(false);
         inputPanel.add(productNameTextField);
@@ -126,7 +125,7 @@ public class InventoryDashboard extends JFrame {
         inputPanel.add(new JLabel("Set New Stock Level:"));
         inputPanel.add(quantityField);
 
-        inputPanel.add(new JLabel("Size:"));
+        inputPanel.add(new JLabel("Size of item:"));
         inputPanel.add(sizeOption);
 
         inputPanel.add(order_new_stock_button);
