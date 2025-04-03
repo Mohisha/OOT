@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Database {
+public class database {
     private static final String url = "jdbc:mysql://localhost:3306/store_management2";
     private static final String username = "root";
 
@@ -31,7 +31,7 @@ public class Database {
 
     public static String[] fetch_item_ids() {
         String query = "SELECT itemID FROM items;";
-        ResultSet resultset = Database.executeQuery(query);
+        ResultSet resultset = database.executeQuery(query);
         List<String> IDs = new ArrayList<>();
 
         try {
@@ -48,7 +48,7 @@ public class Database {
 
     public static double get_item_price_by_id(String itemID) {
         String query = "SELECT sellingPrice FROM items WHERE itemID=" + itemID;
-        ResultSet resultSet = Database.executeQuery(query);
+        ResultSet resultSet = database.executeQuery(query);
         double price = 0.00;
         try {
             while (resultSet.next()) {
@@ -64,7 +64,7 @@ public class Database {
 
     public static String get_item_name_by_id(String itemID) {
         String query = "SELECT itemName FROM items WHERE itemID=" + itemID;
-        ResultSet resultSet = Database.executeQuery(query);
+        ResultSet resultSet = database.executeQuery(query);
         String name = "";
         try {
             while (resultSet.next()) {
@@ -80,7 +80,7 @@ public class Database {
 
     public static int get_item_stock_by_id(String itemID) {
         String query = "SELECT stockLevel FROM items WHERE itemID=" + itemID;
-        ResultSet resultSet = Database.executeQuery(query);
+        ResultSet resultSet = database.executeQuery(query);
         int stock = 0;
         try {
             while (resultSet.next()) {
@@ -96,7 +96,7 @@ public class Database {
 
     public static String[] fetch_transport_methods() {
         String query = "SELECT name FROM Transport;";
-        ResultSet resultset = Database.executeQuery(query);
+        ResultSet resultset = database.executeQuery(query);
         List<String> transport_names = new ArrayList<>();
 
         try {
@@ -113,7 +113,7 @@ public class Database {
 
     public static String[] fetch_low_stock_items() {
         String query = "SELECT itemID, itemName, size, stockLevel, reorderLevel FROM items WHERE stockLevel < reorderLevel;";
-        ResultSet resultset = Database.executeQuery(query);
+        ResultSet resultset = database.executeQuery(query);
         List<String> low_stock_items = new ArrayList<>();
 
         try {
@@ -258,7 +258,7 @@ public class Database {
 
     public static String[] get_new_items() {
         String query = "SELECT * FROM items WHERE sellingPrice IS NULL";
-        ResultSet resultset = Database.executeQuery(query);
+        ResultSet resultset = database.executeQuery(query);
         List<String> new_items = new ArrayList<>();
 
         try {
@@ -276,7 +276,7 @@ public class Database {
 
     public static String[] get_all_items() {
         String query = "SELECT itemID, itemName FROM items";
-        ResultSet resultset = Database.executeQuery(query);
+        ResultSet resultset = database.executeQuery(query);
         List<String> new_items = new ArrayList<>();
 
         try {

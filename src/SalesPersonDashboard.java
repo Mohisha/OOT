@@ -17,13 +17,12 @@ public class SalesPersonDashboard extends JFrame {
     private ArrayList<OrderEntry> orders = new ArrayList<>();
     private List<Order> order_list = new ArrayList<>();
 
-    private JLabel totalPriceLabel, currentTotalLabel, sessionLabel;
-    private JComboBox<String> transportPreferenceField, sizeOption, productIdComboBox;
-    private double totalPrice = 0.0;
-    private JPanel orderDisplayPanel, inputPanel, rightMainPanel, sessionPanel;
-    private JTextField firstNameField, lastNameField, contactField, quantityField, addressField, emailField,
-            unitPriceTextField;
-    private JButton addButton, customerDetailsButton, checkoutButton, saveButton;
+    private JLabel totalPriceLabel,currentTotalLabel, sessionLabel;
+    private JComboBox<String> transportPreferenceField, sizeOption, productIdComboBox; 
+    private double totalPrice = 0.0; 
+    private JPanel orderDisplayPanel,inputPanel, rightMainPanel, sessionPanel;
+    private JTextField firstNameField, lastNameField, contactField, quantityField, addressField, emailField, unitPriceTextField;
+    private JButton addButton, customerDetailsButton, checkoutButton, saveButton; 
     private Customer customer;
     private Order order;
 
@@ -37,36 +36,36 @@ public class SalesPersonDashboard extends JFrame {
 
     public SalesPersonDashboard() {
         super("Sales Person Dashboard");
-
+        
         setLayout(new BorderLayout(5, 10));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 500);
+        setSize(1000,500);
 
-        // left panel for inputs
-        JPanel leftMainPanel = new JPanel(new BorderLayout(5, 5));
+        //left panel for inputs
+        JPanel leftMainPanel = new JPanel(new BorderLayout(5,5));
         inputPanel = new JPanel(new GridLayout(6, 2));
         sessionPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
-        // session panel
+        //session panel
         sessionLabel = new JLabel("Customer Session ID: " + sessionId);
         customerDetailsButton = createStyledButton("Insert Customer Details");
         sessionPanel.add(sessionLabel);
         sessionPanel.add(customerDetailsButton);
         sessionPanel.setBorder(create_border("Input Mode"));
 
-        // product detail input panel
-        productIdComboBox = new JComboBox<>(Database.fetch_item_ids());
+        //product detail input panel
+        productIdComboBox = new JComboBox<>(database.fetch_item_ids()); 
         quantityField = new JTextField();
         sizeOption = new JComboBox<>(new String[] { "Small", "Medium", "Large" });
         currentTotalLabel = new JLabel("Current Total Rs 0.0");
         addButton = createStyledButton("Add To Order");
 
-        // display panel
+        //display panel
         orderDisplayPanel = new JPanel();
         orderDisplayPanel.setLayout(new BoxLayout(orderDisplayPanel, BoxLayout.PAGE_AXIS));
         JScrollPane scrollPane = new JScrollPane(orderDisplayPanel);
 
-        // add left panel with product details
+        //add left panel with product details
         create_order_input_panel();
         inputPanel.setSize(500, 500);
 
@@ -87,11 +86,11 @@ public class SalesPersonDashboard extends JFrame {
         rightMainPanel.add(bottomPanel, BorderLayout.SOUTH);
         rightMainPanel.setBorder(create_border("Display"));
 
-        // add main panels to main frame
+        //add main panels to main frame
         add(leftMainPanel, BorderLayout.WEST);
         add(rightMainPanel, BorderLayout.CENTER);
 
-        // add action listeners
+        //add action listeners
         addButton.addActionListener(new ButtonHandler());
         checkoutButton.addActionListener(new ButtonHandler());
         customerDetailsButton.addActionListener(new ButtonHandler());
@@ -101,7 +100,7 @@ public class SalesPersonDashboard extends JFrame {
     }
 
     private class CustomerDetailsFrame extends JFrame {
-
+        
         public CustomerDetailsFrame() {
             super("Customer Details");
             setLayout(new GridLayout(7, 2));
@@ -114,7 +113,7 @@ public class SalesPersonDashboard extends JFrame {
             addressField = new JTextField();
             emailField = new JTextField();
             saveButton = new JButton("Save");
-
+            
             add(new JLabel("First Name:"));
             add(firstNameField);
             add(new JLabel("Last Name:"));
@@ -126,7 +125,7 @@ public class SalesPersonDashboard extends JFrame {
             add(new JLabel("Email:"));
             add(emailField);
             add(new JLabel("Transport Preference"));
-            add(transportPreferenceField = new JComboBox<>(Database.fetch_transport_methods()));
+            add(transportPreferenceField = new JComboBox<>(database.fetch_transport_methods()));
             add(new JLabel());
             add(saveButton);
 
@@ -138,9 +137,8 @@ public class SalesPersonDashboard extends JFrame {
                     String address = addressField.getText();
                     String email = emailField.getText();
                     String transport = (String) transportPreferenceField.getSelectedItem();
-
-                    if (!firstName.isEmpty() && !lastName.isEmpty() && !contact.isEmpty() && !address.isEmpty()
-                            && !email.isEmpty()) {
+    
+                    if (!firstName.isEmpty() && !lastName.isEmpty() && !contact.isEmpty() && !address.isEmpty() && !email.isEmpty()) {
                         customer = new Customer(firstName, lastName, contact, email, address, transport);
                         JOptionPane.showMessageDialog(null, "Customer details saved");
                         dispose();
@@ -155,7 +153,7 @@ public class SalesPersonDashboard extends JFrame {
 
     public class ButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent ae) {
-            if (ae.getSource() == addButton) {
+            if(ae.getSource() == addButton){
                 String productId = (String) productIdComboBox.getSelectedItem();
                 String quantity = quantityField.getText();
                 String size = (String) sizeOption.getSelectedItem();
@@ -169,13 +167,12 @@ public class SalesPersonDashboard extends JFrame {
                         currentTotalLabel.setText("Current Item Total: Rs " + price);
                         totalPriceLabel.setText("Order Total Rs: " + totalPrice);
 
-                        String order_string = "Product ID: " + productId + ", Quantity: " + qty + ", Size: " + size
-                                + ", Price: " + price + " Rs";
-
+                        String order_string = "Product ID: " + productId + ", Quantity: " + qty + ", Size: " + size + ", Price: "+ price + " Rs";
+                        
                         JPanel orderPanel = new JPanel(new BorderLayout());
                         JLabel orderLabel = new JLabel(order_string);
                         JButton removeButton = new JButton("X");
-                        removeButton.setForeground(Color.RED);
+                        removeButton.setForeground(Color.RED); 
                         orderPanel.add(orderLabel, BorderLayout.CENTER);
                         orderPanel.add(removeButton, BorderLayout.EAST);
 
@@ -183,7 +180,7 @@ public class SalesPersonDashboard extends JFrame {
                         orders.add(orderEntry);
                         orderDisplayPanel.add(orderPanel);
 
-                        // create order object for insert in DB
+                        //create order object for insert in DB
                         order = new Order(Integer.valueOf(productId), qty, price, totalPrice, "No");
                         order_list.add(order);
 
@@ -201,26 +198,27 @@ public class SalesPersonDashboard extends JFrame {
                         orderDisplayPanel.repaint();
 
                         // Clear fields
-                        productIdComboBox.setSelectedIndex(1);
+                        productIdComboBox.setSelectedIndex(1); 
                         quantityField.setText("");
                         sizeOption.setSelectedIndex(0);
 
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(null, "Invalid quantity!");
                     }
-                } else {
+                } 
+                else {
                     JOptionPane.showMessageDialog(null, "Fill all fields!");
                 }
                 // Clear fields
-                productIdComboBox.setSelectedIndex(1);
+                productIdComboBox.setSelectedIndex(1); 
                 quantityField.setText("");
                 sizeOption.setSelectedIndex(0);
-
+                
             }
-            if (ae.getSource() == customerDetailsButton) {
+            if(ae.getSource() == customerDetailsButton){
                 new CustomerDetailsFrame();
             }
-            if (ae.getSource() == checkoutButton) {
+            if(ae.getSource() == checkoutButton){
                 if (totalPrice > 0) {
                     new Checkout(customer, order_list);
                 } else {
@@ -230,15 +228,15 @@ public class SalesPersonDashboard extends JFrame {
         }
     };
 
-    public class ProductIDHandler implements ItemListener {
-        public void itemStateChanged(ItemEvent ie) {
+    public class ProductIDHandler implements ItemListener{
+        public void itemStateChanged(ItemEvent ie){
             String item = productIdComboBox.getSelectedItem().toString();
-            unitPriceTextField.setText(String.valueOf(Database.get_item_price_by_id(item)));
+            unitPriceTextField.setText(String.valueOf(database.get_item_price_by_id(item)));
         }
     }
 
-    public void create_order_input_panel() {
-
+    public void create_order_input_panel(){
+        
         addButton.setText("Add Order");
 
         inputPanel.add(new JLabel("Product ID:"));
@@ -257,6 +255,7 @@ public class SalesPersonDashboard extends JFrame {
         inputPanel.add(currentTotalLabel);
         inputPanel.add(addButton);
 
+        
         JLabel receiptLabel = new JLabel("Receipt for Session ID " + sessionId + ":");
         orderDisplayPanel.add(receiptLabel);
 
@@ -274,15 +273,15 @@ public class SalesPersonDashboard extends JFrame {
         inputPanel.setBorder(create_border("Order Inputs"));
         orderDisplayPanel.revalidate();
         orderDisplayPanel.repaint();
-    }
+    }   
 
-    public Border create_border(String title) {
+    public Border create_border(String title){
         Border first = BorderFactory.createBevelBorder(EtchedBorder.RAISED);
         Border second = BorderFactory.createTitledBorder(title);
 
         return BorderFactory.createCompoundBorder(first, second);
     }
-
+    
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setBackground(Color.WHITE);
@@ -290,7 +289,7 @@ public class SalesPersonDashboard extends JFrame {
         button.setFont(new Font("Arial", Font.BOLD, 14));
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+        
         return button;
     }
 

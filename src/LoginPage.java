@@ -50,7 +50,7 @@ public class LoginPage extends JFrame {
 
             String query = "SELECT * FROM user WHERE username=\"" + username + "\" AND password=\"" + password + "\";";
 
-            ResultSet resultSet = Database.executeQuery(query);
+            ResultSet resultSet = database.executeQuery(query);
             try {
                 if (resultSet.next() && resultSet.getString("password").equals(password)) {
                     JOptionPane.showMessageDialog(null, "Successfully Logged In: " + username);

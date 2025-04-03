@@ -10,7 +10,7 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class Checkout extends JFrame {
-
+    
     private SalesPersonDashboard parent;
     private JButton checkoutButton;
     private JTextField cardNumberField, checkNumberField;
@@ -19,7 +19,7 @@ public class Checkout extends JFrame {
     private Invoice invoice;
 
     public Checkout(Customer customer, List<Order> order_list) {
-
+        
         this.customer = customer;
 
         setTitle("Checkout");
@@ -36,7 +36,7 @@ public class Checkout extends JFrame {
         for (Order order : order_list) {
             invoice.AddOrder(order);
         }
-
+        
         invoice.AddTransportCharge(get_transport_charge(customer.transportPreference));
         invoice.AddTransportPreference(customer.transportPreference);
 
@@ -80,13 +80,13 @@ public class Checkout extends JFrame {
         setVisible(true);
     }
 
-    public class ButtonHandler implements ActionListener {
-        public void actionPerformed(ActionEvent ae) {
-            if (ae.getSource() == checkoutButton) {
-
+    public class ButtonHandler implements ActionListener{
+        public void actionPerformed(ActionEvent ae){
+            if(ae.getSource() == checkoutButton){
+                
                 String method = (String) paymentMethodCombo.getSelectedItem();
                 if ("Card".equals(method) && cardNumberField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please enter card number!");
+                    JOptionPane.showMessageDialog(null , "Please enter card number!");
                     return;
                 }
                 if ("Check".equals(method) && checkNumberField.getText().trim().isEmpty()) {
@@ -94,13 +94,13 @@ public class Checkout extends JFrame {
                     return;
                 }
 
-                Database.create_order(customer, invoice);
+                database.create_order(customer, invoice);
                 JOptionPane.showMessageDialog(null, "Checkout Successful!\nTotal: Rs " + invoice.get_invoice_total());
-
+                
                 dispose();
             }
 
-            if (ae.getSource() == paymentMethodCombo) {
+            if(ae.getSource() == paymentMethodCombo){
                 String method = (String) paymentMethodCombo.getSelectedItem();
                 cardNumberField.setEnabled("Card".equals(method));
                 checkNumberField.setEnabled("Check".equals(method));
@@ -108,16 +108,17 @@ public class Checkout extends JFrame {
         }
     }
 
-    public double get_transport_charge(String name) {
+    public double get_transport_charge(String name){
         String query = "SELECT charge FROM Transport WHERE name=\"" + name + "\"";
-        ResultSet resultSet = Database.executeQuery(query);
+        ResultSet resultSet = database.executeQuery(query);
         double price = 0.00;
-        try {
-            while (resultSet.next()) {
+        try{
+            while (resultSet.next()){
                 price = resultSet.getDouble("charge");
             }
             resultSet.close();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e){
             System.out.println(e.getMessage());
         }
 

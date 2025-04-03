@@ -39,7 +39,7 @@ public class InventoryDashboard extends JFrame {
         sessionPanel.setBorder(create_border("Inventory Mode"));
 
         // Product detail input panel
-        productIdComboBox = new JComboBox<>(Database.fetch_item_ids());
+        productIdComboBox = new JComboBox<>(database.fetch_item_ids());
         quantityField = new JTextField();
         sizeOption = new JComboBox<>(new String[] { "Small", "Medium", "Large" });
         order_new_stock_button = createStyledButton("Order New Stock");
@@ -87,7 +87,7 @@ public class InventoryDashboard extends JFrame {
                 String size = (String) sizeOption.getSelectedItem();
 
                 if (!productId.isEmpty() && !quantity.isEmpty() && size != null && !size.isEmpty()) {
-                    Database.update_item_stock(productId, Integer.valueOf(quantity));
+                    database.update_item_stock(productId, Integer.valueOf(quantity));
                     JOptionPane.showMessageDialog(null, "Item Stock Updated");
                     orderDisplayPanel.repaint();
                 } else {
@@ -98,7 +98,7 @@ public class InventoryDashboard extends JFrame {
             if (ae.getSource() == order_new_stock_button) {
                 String productId = (String) productIdComboBox.getSelectedItem();
                 String quantity = quantityField.getText();
-                Database.create_reorder(productId, Integer.valueOf(quantity));
+                database.create_reorder(productId, Integer.valueOf(quantity));
 
                 JOptionPane.showMessageDialog(null, "Inventory updated successfully!");
             }
@@ -108,8 +108,8 @@ public class InventoryDashboard extends JFrame {
     public class ProductIDHandler implements ItemListener {
         public void itemStateChanged(ItemEvent ie) {
             String item = productIdComboBox.getSelectedItem().toString();
-            productNameTextField.setText(Database.get_item_name_by_id(item));
-            quantityField.setText(String.valueOf(Database.get_item_stock_by_id(item)));
+            productNameTextField.setText(database.get_item_name_by_id(item));
+            quantityField.setText(String.valueOf(database.get_item_stock_by_id(item)));
         }
     }
 
@@ -135,7 +135,7 @@ public class InventoryDashboard extends JFrame {
     }
 
     public void checkStockLevel() {
-        String[] low_stock_items = Database.fetch_low_stock_items();
+        String[] low_stock_items = database.fetch_low_stock_items();
         for (String line : low_stock_items) {
             orderDisplayPanel.add(new JLabel(line));
         }
