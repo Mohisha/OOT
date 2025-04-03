@@ -29,7 +29,7 @@ public class Checkout extends JFrame {
         setLocationRelativeTo(parent);
 
         JLabel paymentMethodLabel = new JLabel("Payment Method:");
-        paymentMethodCombo = new JComboBox<>(new String[] { "Card", "Check" });
+        paymentMethodCombo = new JComboBox<>(new String[] { "Select Payment Method","Card", "Check" });
 
         quotation = new Quotation();
 
