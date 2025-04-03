@@ -62,7 +62,7 @@ public class LoginPage extends JFrame {
                     if (resultSet.getString("role").equals("Salesperson")) {
                         new SalesPersonDashboard().setVisible(true);
                     } else if (resultSet.getString("role").equals("Inventory Officer")) {
-                        new InventoryOfficerDashboard().setVisible(true);
+                        new InventoryDashboard().setVisible(true);
                     }
 
                     dispose();
