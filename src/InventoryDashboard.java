@@ -15,7 +15,7 @@ public class InventoryDashboard extends JFrame {
     private JLabel sessionLabel;
     private JButton order_new_stock_button;
     private JComboBox<String> sizeOption, productIdComboBox;
-    private JPanel orderDisplayPanel, inputPanel, rightMainPanel, sessionPanel;
+    private JPanel orderDisplayPanel, inputPanel, rightMainPanel, leftMainPanel, sessionPanel, buttonPanel; // Corrected leftMainPane1 to leftMainPanel
     private JTextField quantityField, productNameTextField;
     private JButton update_item_stock_button, updateInventoryButton;
 
@@ -26,9 +26,10 @@ public class InventoryDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 500);
 
-        // Left panel for inputs
+        // left panel for inputs 
         JPanel leftMainPanel = new JPanel(new BorderLayout(5, 5));
-        inputPanel = new JPanel(new GridLayout(7, 2, 10, 10)); // Reduced rows as stock update is removed
+        inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)); // Added buttonPanel with FlowLayout
         sessionPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
         // Session panel
@@ -41,7 +42,7 @@ public class InventoryDashboard extends JFrame {
         // Product detail input panel
         productIdComboBox = new JComboBox<>(Database.fetch_item_ids());
         quantityField = new JTextField();
-        sizeOption = new JComboBox<>(new String[] { "Small", "Medium", "Large" });
+        sizeOption = new JComboBox<>(new String[]{"Small", "Medium", "Large"});
         order_new_stock_button = createStyledButton("Order New Stock");
         update_item_stock_button = createStyledButton("Update Item");
 
@@ -52,12 +53,13 @@ public class InventoryDashboard extends JFrame {
 
         checkStockLevel();
 
-        // Add left panel with product details
+        // Add input panel to leftMainPanel
         create_order_input_panel();
-
+  
         leftMainPanel.add(inputPanel, BorderLayout.NORTH);
+    
 
-        // Right panel for display
+        // right panel for display
         rightMainPanel = new JPanel(new BorderLayout());
         rightMainPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -66,8 +68,8 @@ public class InventoryDashboard extends JFrame {
         rightMainPanel.setBorder(create_border("Inventory Items Needing Restock."));
 
         // Add main panels to the main frame
-        add(rightMainPanel);
         add(leftMainPanel);
+        add(rightMainPanel);
 
         // Add action listeners
         update_item_stock_button.addActionListener(new ButtonHandler());
@@ -81,7 +83,6 @@ public class InventoryDashboard extends JFrame {
     public class ButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent ae) {
             if (ae.getSource() == update_item_stock_button) {
-                // Get values for product, price, quantity, etc.
                 String productId = (String) productIdComboBox.getSelectedItem();
                 String quantity = quantityField.getText();
                 String size = (String) sizeOption.getSelectedItem();
@@ -129,6 +130,7 @@ public class InventoryDashboard extends JFrame {
         inputPanel.add(sizeOption);
 
         inputPanel.add(order_new_stock_button);
+        inputPanel.add(new JLabel());
         inputPanel.add(update_item_stock_button);
 
         inputPanel.setBorder(create_border("Inventory Inputs"));
